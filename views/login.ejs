@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<%- include('includes/head.ejs') %>
+  <%- include('includes/navigation.ejs') %>
     <link rel="stylesheet" href="/css/login.css" />
-    <title>로그인</title>
-  </head>
-
-  <body>
     <div class="login_wrap">
       <div class="login_title">
         <h1>로그인</h1>
@@ -16,8 +8,8 @@
       <div class="login_form">
         <form action="/user/login" method="post">
           <div class="input_group">
-            <input type="text" placeholder="아이디"/>
-            <input type="password" placeholder="비밀번호"/>
+            <input type="text" placeholder="아이디" />
+            <input type="password" placeholder="비밀번호" />
           </div>
           <div>
             <button type="submit" class="login_button">로그인하기</button>
@@ -25,6 +17,4 @@
         </form>
       </div>
     </div>
-  </div>
-  </body>
-</html>
+    <%- include('includes/end.ejs') %>

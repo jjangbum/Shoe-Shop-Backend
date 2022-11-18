@@ -11,11 +11,16 @@
     <% for(var i = 0; i < data.length; i++) {%>
 
     <article>
-      <form action="/:id" method="post">
+      <form action="/item/:id" method="post">
         <h1><%= data[i].name %><br /></h1>
         <h2>가격 : <%= data[i].price %></h2>
         <button class="btn" type="submit">상세 페이지로 이동</button>
-        <input type="hidden" name="productId" value="<%= data[i].index %>" />
+        <input
+          type="hidden"
+          name="id"
+          value="<%= data[i].index %>"
+          id="<%= data[i].index %>"
+        />
       </form>
 
       <form action="/cart" method="post">

@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  var productId = req.body.productId;
+  const productId = req.body.productId;
   arr.push(productId);
   res.write("<script>alert('added to cart');</script>"); //장바구니에 담았다는 alert 띄우고
   res.write('<script>window.location="../item"</script>'); //item 페이지로 돌아온다.

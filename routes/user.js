@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const userInfo = [
+const userInfos = [
   {
     id: "doraemon49",
     password: "0000",
@@ -16,12 +16,23 @@ const userInfo = [
   },
 ];
 
-router.get("/login", (req, res) => {
-  res.json(userInfo);
-});
-
 router.get("/", (req, res) => {
   res.render("login", {});
+});
+
+router.get("/login", (req, res) => {
+  res.json(userInfos);
+});
+
+router.get("/login/:id", (req, res) => {
+  const userInfo = userInfos.find((u) => {
+    return u.id === req.params.id;
+  });
+  if (userInfo) {
+    res.json(userInfo);
+  } else {
+    res.status(404).json({ errorMessage: "사용자를 찾을 수 없습니다." });
+  }
 });
 
 // const userInfo = {

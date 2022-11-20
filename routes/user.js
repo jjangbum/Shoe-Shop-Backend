@@ -1,3 +1,4 @@
+const { response } = require("express");
 const express = require("express");
 const router = express.Router();
 const session = require("express-session");
@@ -35,10 +36,18 @@ router.post("/login", (req, res) => {
   if (id === userInfos.id && password === userInfos.password) {
     req.session.isLogin = true;
     req.session.loginId = userInfos.id;
-    res.redirect("/");
+    req.session.save(function () {
+      res.redirect("/");
+    });
   } else {
     res.send("사용자 정보가 없습니다");
   }
+});
+
+router.get("/logout", (req, res) => {
+  req.session.destroy(function (err) {
+    response.redirect("/");
+  });
 });
 
 module.exports = router;

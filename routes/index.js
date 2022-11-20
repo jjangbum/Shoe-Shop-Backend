@@ -10,9 +10,9 @@ function userIsLogin(req, res) {
 }
 
 function loginStatus(req, res) {
-  const loginStatus = "안녕하세요";
+  const loginStatus = '<a href="/user/login">로그인</a>';
   if (userIsLogin(req, res)) {
-    loginStatus = `${req.session.loginId} | "안녕하세요"`;
+    loginStatus = `${req.session.loginId} | <a href="/user/logout">로그아웃</a>`;
   }
   return loginStatus;
 }

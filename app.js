@@ -1,8 +1,6 @@
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const session = require("express-session");
-const MySQLStore = require("express-mysql-session")(session);
 
 const indexRouter = require("./routes/index");
 const userRouter = require("./routes/user");
@@ -21,26 +19,6 @@ app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/item", itemRouter);
 app.use("/cart", cartRouter);
-
-//session사용
-const options = {
-  host: "localhost",
-  port: 3002,
-  id: "",
-  password: "",
-  database: "",
-};
-
-const sessionStore = new MySQLStore(options);
-
-app.use(
-  session({
-    secret: "0000",
-    resave: false,
-    saveUninitialized: true,
-    store: sessionStore, //저장소를 DB로 연결된 sessionStore 객체로 지정
-  })
-);
 
 // error page
 app.use((req, res, next) => {

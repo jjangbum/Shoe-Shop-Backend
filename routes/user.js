@@ -1,94 +1,44 @@
 const express = require("express");
 const router = express.Router();
+const session = require("express-session");
+const FileStore = require("session-file-store")(session);
 
-const userInfos = [
-  {
-    id: "doraemon49",
-    password: "0000",
-  },
-  {
-    id: "Bokyeom",
-    password: "0000",
-  },
-  {
-    id: "haejun1",
-    password: "0000",
-  },
-];
+router.use(
+  session({
+    secret: "a0b0c0d0",
+    resave: false,
+    saveUninitialized: true,
+    store: new FileStore(), //저장소
+  })
+);
 
+const userInfos = {
+  id: "doraemon49",
+  password: "0000", //비밀번호 암호화 or hash하는법 적용해보자
+};
+// {
+//   id: "Bokyeom",
+//   password: "0000",
+// },
+// {
+//   id: "haejun1",
+//   password: "0000",
+// },
 router.get("/", (req, res) => {
   res.render("login", {});
 });
 
-router.get("/login", (req, res) => {
-  res.json(userInfos);
-});
-
-router.get("/login/:id", (req, res) => {
-  const userInfo = userInfos.find((u) => {
-    return u.id === req.params.id;
-  });
-  if (userInfo) {
-    res.json(userInfo);
+router.post("/login", (req, res) => {
+  const userInfo = req.body;
+  const id = userInfo.id;
+  const password = userInfo.password;
+  if (id === userInfos.id && password === userInfos.password) {
+    req.session.isLogin = true;
+    req.session.loginId = userInfos.id;
+    res.redirect("/");
   } else {
-    res.status(404).json({ errorMessage: "사용자를 찾을 수 없습니다." });
+    res.send("사용자 정보가 없습니다");
   }
 });
-
-// const userInfo = {
-//   id: "a",
-//   password: "a",
-// };
-// // 로그인 페이지
-// router.get("/", (req, res) => {
-//   res.render("login", {});
-// });
-
-// router.get("/login", (req, res) => {
-//   const post = req.body;
-//   db.query(
-//     "select member.id as id, password, author_id, name from member left join author on member.author_id = author.id where member.id=? and password=?",
-//     [post.id, post.password],
-//     (err, result) => {
-//       if (err) throw err;
-//       if (result[0] !== undefined) {
-//         req.session.uid = result[0].id;
-//         req.session.author_id = result[0].author_id;
-//         req.session.isLogined = true;
-//         req.session.save(function () {
-//           res.redirect("/");
-//         });
-//       }
-//     }
-//   );
-// });
-
-// // 로그인
-// router.post("/login", (req, res) => {
-//   if (req.body.id == userInfo.id && req.body.password == userInfo.password) {
-//     req.body.user = req.body.id;
-//     res.redirect("/user/approve");
-//   } else {
-//     res.redirect("/user");
-//   }
-// });
-
-// router.get("/approve", (req, res) => {
-//   res.render("index", {
-//     user: req.body.user,
-//   });
-// });
-
-// router.get("/logout", (req, res) => {
-//   delete req.session.uid;
-//   delete req.session.isLogined;
-//   delete req.session.author_id;
-
-//   req.session.save(function () {
-//     res.render("index", {
-//       logout: "로그아웃 되었습니다.",
-//     });
-//   });
-// });
 
 module.exports = router;

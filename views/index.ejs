@@ -1,22 +1,16 @@
 <%- include('includes/head.ejs') %>
   <%- include('includes/navigation.ejs') %>
-    <div>
-      <% if(locals.logout){ %>
-        <div>
-          <%= logout %>
-        </div>
-        <% } %>
-    </div>
 
-    <div>
-      <% if(locals.approve){ %>
-        <div>
-          <%= user %>
-        </div>
-        <% } %>
-    </div>
+    <%= loginStatus %>
+      <div>
+        <% if(locals.approve){ %>
+          <div>
+            <%= user %>
+          </div>
+          <% } %>
+      </div>
 
-    <div>
-      메인페이지 내용 입력
-    </div>
-    <%- include('includes/end.ejs') %>
+      <div>
+        메인페이지 내용 입력
+      </div>
+      <%- include('includes/end.ejs') %>

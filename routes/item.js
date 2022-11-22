@@ -17,8 +17,8 @@ router.get("/", (req, res) => {
 });
 
 // 상품 상세 페이지
-router.post("/", (req, res) => {
-  const index = req.query.id;
+router.post("/:id", (req, res) => {
+  const index = req.params.id;
   res.render("detail", {
     data: jsonData,
     productId: index,

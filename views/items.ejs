@@ -11,7 +11,7 @@
     <% for(var i = 0; i < data.length; i++) {%>
 
     <article>
-      <form action="/item?id=<%= data[i].index %>" method="post">
+      <form action="/item/<%= data[i].index %>" method="post">
         <h1><%= data[i].name %><br /></h1>
         <h2>가격 : <%= data[i].price %></h2>
         <button class="btn" type="submit">상세 페이지로 이동</button>

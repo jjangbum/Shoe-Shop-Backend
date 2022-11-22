@@ -17,14 +17,11 @@ router.get("/", (req, res) => {
 });
 
 // 상품 상세 페이지
-router.post("/test", (req, res) => {
-  //console.log("test");
-  //console.log("제품 id는", req.params.id);
-  const productId = req.body.productId;
-  //res.send("item id:" + req.params.id);
+router.post("/", (req, res) => {
+  const index = req.query.id;
   res.render("detail", {
     data: jsonData,
-    productId: productId,
+    productId: index,
   });
 });
 

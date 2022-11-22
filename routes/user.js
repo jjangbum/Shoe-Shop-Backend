@@ -1,53 +1,45 @@
-const { response } = require("express");
 const express = require("express");
 const router = express.Router();
-const session = require("express-session");
-const FileStore = require("session-file-store")(session);
 
-router.use(
-  session({
-    secret: "a0b0c0d0",
-    resave: false,
-    saveUninitialized: true,
-    store: new FileStore(), //저장소
-  })
-);
+const xlsx = require("xlsx");
+const excelFile = xlsx.readFile(__dirname + "/../public/shoes_user.xlsx");
+const sheetName = excelFile.SheetNames[0];
+const firstSheet = excelFile.Sheets[sheetName];
+const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: "" });
 
-const userInfos = {
-  id: "doraemon49",
-  password: "0000", //비밀번호 암호화 or hash하는법 적용해보자
-};
-// {
-//   id: "Bokyeom",
-//   password: "0000",
-// },
-// {
-//   id: "haejun1",
-//   password: "0000",
-// },
 router.get("/", (req, res) => {
   res.render("login", {});
 });
 
+router.post("/register", (req, res) => {
+  //length로 index할 수 있지 않을까
+  const params = xlsx.utils.aoa_to_sheet([["4", req.body.id, req.body.pw]]);
+
+  xlsx.utils.sheetName_append_sheet(sheetName, params);
+});
+
 router.post("/login", (req, res) => {
-  const userInfo = req.body;
-  const id = userInfo.id;
-  const password = userInfo.password;
-  if (id === userInfos.id && password === userInfos.password) {
-    req.session.isLogin = true;
-    req.session.loginId = userInfos.id;
-    req.session.save(function () {
-      res.redirect("/");
+  const { id, pw } = req.body;
+  if (id === jsonData.id && pw === jsonData.pw) {
+    req.session.loginData = jsonData.id;
+    req.session.save((error) => {
+      if (err) console.log(error);
     });
+    res.send(true);
   } else {
-    res.send("사용자 정보가 없습니다");
+    res.send(false);
   }
 });
 
 router.get("/logout", (req, res) => {
-  req.session.destroy(function (err) {
-    response.redirect("/");
-  });
+  if (req.session.loginData == jsonData.id) {
+    req.session.destroy((error) => {
+      if (error) console.log(error);
+    });
+    res.send(true);
+  } else {
+    res.send(false);
+  }
 });
 
 module.exports = router;

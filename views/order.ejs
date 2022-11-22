@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>주문 완료</title>
+  </head>
+  <body>
+    <form action="/" method="post">
+        <% for(var i = 0; i < arr.length; i++) {%>
+            <p> 
+                <h1>
+                    <%= arr[i] %>번 상품 주문 완료!
+                </h1>
+                <h2> <%= data[arr[i]-1].name %></h2>
+                <h2>가격 : <%= data[arr[i]-1].price %></h2>
+                <h2>브랜드 : <%= data[arr[i]-1].brand %></h2>
+                <h2>상품코드 : <%= data[arr[i]-1].num %></h2>
+                <h2>타입 : <%= data[arr[i]-1].type %></h2>
+            </p>
+        <% } %>
+
+    </form>
+  </body>
+</html>

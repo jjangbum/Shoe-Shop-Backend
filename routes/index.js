@@ -14,12 +14,26 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  console.log("주문한 제품 번호(index)", req.body.select);
+  const orderArr = req.body.select;
+  console.log("주문한 제품 번호(index)", orderArr);
   //res.write("<script>alert('ordered!!!');</script>");
   //res.write('<script>window.location="../"</script>');
+  if (req.body.productId != undefined) {
+    //console.log("상품 바로 주문하기", req.body.productId);
+    //제품 ID를 배열에 넣기
+    var arr = new Array();
+    var arr = [];
+    const productId = req.body.productId;
+    arr.push(productId);
+    //console.log(arr);
+    res.render("order", {
+      data: jsonData,
+      arr: arr,
+    });
+  }
   res.render("order", {
     data: jsonData,
-    arr: req.body.select,
+    arr: orderArr,
   });
 });
 

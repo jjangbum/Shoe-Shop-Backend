@@ -17,6 +17,11 @@
         <h2>타입 : <%= data[productId-1].type %></h2>
     </p>
     
+    <form action="/" method="post">
+      <button class="btn" type="submit">주문하기</button>
+      <input type="hidden" name="productId" value="<%= productId %>" />
+    </form>
+
     <form action="/cart" method="post">
       <button class="btn" type="submit">장바구니에 추가</button>
       <input type="hidden" name="productId" value="<%= productId %>" />

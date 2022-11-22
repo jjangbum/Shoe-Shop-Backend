@@ -16,6 +16,7 @@ router.post("/register", (req, res) => {
   const params = xlsx.utils.aoa_to_sheet([["4", req.body.id, req.body.pw]]);
 
   xlsx.utils.sheetName_append_sheet(sheetName, params);
+  res.end();
 });
 
 router.post("/login", (req, res) => {

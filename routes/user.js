@@ -1,45 +1,45 @@
 const express = require("express");
 const router = express.Router();
-
 const xlsx = require("xlsx");
-const excelFile = xlsx.readFile(__dirname + "/../public/shoes_user.xlsx");
-const sheetName = excelFile.SheetNames[0];
-const firstSheet = excelFile.Sheets[sheetName];
-const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: "" });
 
-const { v4 } = require("uuid");
-v4();
-
-let options = {};
-console.log(v4(options));
-
-router.get("/", (req, res) => {
-  res.render("login", {});
+router.use("/", (req, res, next) => {
+  // 엑셀 데이터 불러오기
+  const excelFile = xlsx.readFile(__dirname + "/../public/shoes_user.xlsx");
+  const sheetName = excelFile.SheetNames[0];
+  const firstSheet = excelFile.Sheets[sheetName];
+  const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: "" });
+  req.jsonData = jsonData;
+  next();
 });
 
-router.post("/register", (req, res) => {
-  //length로 index할 수 있지 않을까
-  const params = xlsx.utils.aoa_to_sheet([["4", req.body.id, req.body.pw]]);
-
-  xlsx.utils.sheetName_append_sheet(sheetName, params);
-  res.end();
+// 로그인 상태 확인
+router.get("/check", (req, res) => {
+  return req.session.userInfo ? res.send(true) : res.send(false);
 });
 
+// 회원가입
+// router.post('/register', (req, res) => {
+//   const { id, pw } = req.body;
+//   const params = xlsx.utils.aoa_to_sheet([['4', req.body.id, req.body.pw]]);
+//   xlsx.utils.sheetName_append_sheet(sheetName, params);
+//   res.end();
+// });
+
+// 로그인
 router.post("/login", (req, res) => {
   const { id, pw } = req.body;
-  if (id === jsonData.id && pw === jsonData.pw) {
-    req.session.loginData = jsonData.id;
-    req.session.save((error) => {
-      if (err) console.log(error);
-    });
-    res.send(true);
-  } else {
-    res.send(false);
-  }
+  req.jsonData.forEach((user) => {
+    console.log(user);
+    if (id === user.id && pw === user.pw) {
+      return res.send(true);
+    }
+  });
+  res.send(false);
 });
 
+// 로그아웃
 router.post("/logout", (req, res) => {
-  if (req.session.loginData == jsonData.id) {
+  if (req.session.userInfo) {
     req.session.destroy((error) => {
       if (error) console.log(error);
     });

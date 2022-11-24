@@ -27,15 +27,13 @@ app.use("/cart", cartRouter);
 //login
 app.use(
   cors({
-    //cors : 도메인과 포트에서 리소스를 요청하고 받는, 외부에서의 입장을 막아줌(여기서 오는거만 허용하게)
-    origin: true,
-    credentials: true,
+    origin: "*",
   })
 );
 app.use(cookieParser()); //요청된 쿠키를 쉽게 추출할 수 있도록 함
 app.use(
   session({
-    key: "loginData",
+    key: "userInfo",
     secret: "testSecret", //위 2개는 env파일?
     resave: false, //요청이 올 때 세션에 수정 사항이 생기지 않더라도 세션을 다시 저장할지 설정
     saveUninitialized: false, //세션에 저장할 내용이 없더라도 처음부터 세션을 생성할지 설정

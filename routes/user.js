@@ -7,6 +7,12 @@ const sheetName = excelFile.SheetNames[0];
 const firstSheet = excelFile.Sheets[sheetName];
 const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: "" });
 
+const { v4 } = require("uuid");
+v4();
+
+let options = {};
+console.log(v4(options));
+
 router.get("/", (req, res) => {
   res.render("login", {});
 });
@@ -32,7 +38,7 @@ router.post("/login", (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   if (req.session.loginData == jsonData.id) {
     req.session.destroy((error) => {
       if (error) console.log(error);

@@ -27,7 +27,7 @@ app.use("/cart", cartRouter);
 //login
 app.use(
   cors({
-    //cors : 도메인과 포트에서 리소스를 요청하고 받는
+    //cors : 도메인과 포트에서 리소스를 요청하고 받는, 외부에서의 입장을 막아줌(여기서 오는거만 허용하게)
     origin: true,
     credentials: true,
   })

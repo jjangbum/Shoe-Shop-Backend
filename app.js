@@ -34,7 +34,7 @@ app.use(cookieParser()); //요청된 쿠키를 쉽게 추출할 수 있도록 �
 app.use(
   session({
     key: "userInfo",
-    secret: "testSecret", //위 2개는 env파일?
+    secret: "testSecret",
     resave: false, //요청이 올 때 세션에 수정 사항이 생기지 않더라도 세션을 다시 저장할지 설정
     saveUninitialized: false, //세션에 저장할 내용이 없더라도 처음부터 세션을 생성할지 설정
     cookie: {

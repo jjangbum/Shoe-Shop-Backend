@@ -40,6 +40,18 @@ router.post("/", (req, res) => {
 });
 
 // 장바구니 삭제
-router.delete("/", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  const data = req.jsonData;
+  const id = req.params.id;
+
+  const course = data.find((item) => item.index === id);
+  if (!course)
+    return res.status(404).send("The course with the given ID was not found");
+
+  const deleteIndex = data.indexOf(course);
+  data.splice(deleteIndex, 1);
+
+  res.json(course);
+});
 
 module.exports = router;

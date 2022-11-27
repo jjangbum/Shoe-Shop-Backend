@@ -17,7 +17,15 @@ router.use((req, res, next) => {
 // 장바구니 조회
 router.get("/", (req, res) => {
   //console.log(req.jsonData.length);
-  res.json(req.jsonData);
+  const cartdata = req.jsonData;
+  const uuid = req.body.uuid;
+  var cartArr = [];
+  cartdata.forEach((item) => {
+    if (item.uuid == uuid) {
+      cartArr.push(item);
+    }
+  });
+  return res.send(cartArr);
 });
 
 // 장바구니 추가

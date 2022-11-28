@@ -15,8 +15,8 @@ router.use('/', (req, res, next) => {
 
 // 로그인 상태 확인
 router.get('/check', (req, res) => {
-  const status = req.session.user ? res.send(true) : res.send(false);
-  return status;
+  const status = req.session.user ? true : false;
+  return res.send(status);
 });
 
 // 로그인

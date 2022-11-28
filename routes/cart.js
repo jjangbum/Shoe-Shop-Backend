@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const xlsx = require("xlsx"); //xlsx 모듈 추출
 const path = require("path");
+const { execFile } = require("child_process");
 
 // 장바구니 엑셀 읽기
 // 사용자 uuid(고유값)로 필터링해서 현재 로그인한 사용자의 장바구니 데이터 만들어주는 미들웨어
@@ -31,12 +32,19 @@ router.get("/", (req, res) => {
 // 장바구니 추가
 router.post("/", (req, res) => {
   //장바구니에 담을 json data
-  const cartJSON = req.body.jsondata; //json 형태로 장바구니에 담을 아이템 가져오기
+  const cartJSON = req.body; //json 형태로 장바구니에 담을 아이템 가져오기
+  console.log(cartJSON);
+
   // 직접적으로 엑셀 작성
-  const excelFile = xlsx.utils.book_new();
-  const ws = xlsx.utils.json_to_sheet(cartJSON);
-  xlsx.utils.book_append_sheet(excelFile, ws, "Sheet1");
-  xlsx.writeFile(excelFile, path.join(__dirname + "/../public/cart.xlsx"));
+  //const test = xlsx.readFile(__dirname + "/../public/cart.xlsx"); //엑셀 파일 가져오기
+  const wb = xlsx.utils.book_new();
+  const ws = xlsx.utils.sheet_add_json(cartJSON);
+  //sheet_add_json ; adds an array of JS objects to an existing worksheet.
+  //or
+  //json_to_sheet ;  converts an array of JS objects to a worksheet.
+
+  xlsx.utils.book_append_sheet(wb, ws, "Sheet1");
+  xlsx.writeFile(wb, path.join(__dirname + "/../public/cart.xlsx"));
 });
 
 // 장바구니 삭제

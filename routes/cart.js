@@ -44,14 +44,14 @@ router.delete("/:id", (req, res) => {
   const data = req.jsonData;
   const id = req.params.id;
 
-  const course = data.find((item) => item.index === id);
+  const course = data.find((item) => item.index == id);
   if (!course)
     return res.status(404).send("The course with the given ID was not found");
 
   const deleteIndex = data.indexOf(course);
   data.splice(deleteIndex, 1);
 
-  res.json(course);
+  res.json(data);
 });
 
 module.exports = router;

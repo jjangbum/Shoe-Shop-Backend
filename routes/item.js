@@ -19,11 +19,9 @@ router.get('/', (req, res) => {
 
 // 특정 상품 조회
 router.get('/:id', (req, res) => {
-  const data = req.jsonData;
   const id = req.params.id;
-  data.forEach((item) => {
-    if (item.index == id) return res.json(item);
-  });
+  const item = req.jsonData.find((item) => id === item.index);
+  if (item) return res.json(item);
   return res.send(false);
 });
 

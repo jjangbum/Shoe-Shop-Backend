@@ -39,11 +39,9 @@ app.use('/user', userRouter);
 app.use('/item', itemRouter);
 app.use('/cart', cartRouter);
 
-app.use((req, res, next, err) => {
+app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Sever Error' });
 });
-
-// error page
 app.use((req, res, next) => {
   res.status(404).json({ message: '404' });
 });

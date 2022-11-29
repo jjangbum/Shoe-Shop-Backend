@@ -31,19 +31,23 @@ router.get('/', (req, res) => {
 // 장바구니 추가
 router.post('/', (req, res) => {
   //장바구니에 담을 json data
-  const cartJSON = req.body; //json 형태로 장바구니에 담을 아이템 가져오기
+  const cartJSON = {
+    uuid: req.session.user,
+    ...req.body,
+  }; //json 형태로 장바구니에 담을 아이템 가져오기
   console.log(cartJSON);
+  const workbook = xlsx.readFile(__dirname + '/../public/cart.xlsx');
+  let worksheets = {};
+  for (const sheetName of workbook.SheetNames) {
+    worksheets[sheetName] = xlsx.utils.sheet_to_json(
+      workbook.Sheets[sheetName]
+    );
+  }
+  worksheets.Sheet1.push(cartJSON);
 
-  // 직접적으로 엑셀 작성
-  //const test = xlsx.readFile(__dirname + "/../public/cart.xlsx"); //엑셀 파일 가져오기
-  const wb = xlsx.utils.book_new();
-  const ws = xlsx.utils.sheet_add_json(cartJSON);
-  //sheet_add_json ; adds an array of JS objects to an existing worksheet.
-  //or
-  //json_to_sheet ;  converts an array of JS objects to a worksheet.
-
-  xlsx.utils.book_append_sheet(wb, ws, 'Sheet1');
-  xlsx.writeFile(wb, path.join(__dirname + '/../public/cart.xlsx'));
+  xlsx.utils.sheet_add_json(workbook.Sheets['Sheet1'], worksheets.Sheet1);
+  xlsx.writeFile(workbook, path.join(__dirname + '/../public/cart.xlsx'));
+  return res.json(worksheets);
 });
 
 // 장바구니 삭제

@@ -1,32 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const xlsx = require('xlsx'); //xlsx 모듈 추출
+const xlsx = require('xlsx');
 const path = require('path');
 const { execFile } = require('child_process');
 
 // 장바구니 엑셀 읽기
-// 사용자 uuid(고유값)로 필터링해서 현재 로그인한 사용자의 장바구니 데이터 만들어주는 미들웨어
 router.use((req, res, next) => {
-  const excelFile = xlsx.readFile(__dirname + '/../public/cart.xlsx'); //엑셀 파일 가져오기
-  const sheetName = excelFile.SheetNames[0]; //첫번째 시트 정보 추출
-  const firstSheet = excelFile.Sheets[sheetName]; //시트의 제목 추출
-  const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: '' }); //엑셀 파일의 첫번째 시트를 읽어온다.
+  const excelFile = xlsx.readFile(__dirname + '/../public/cart.xlsx');
+  const sheetName = excelFile.SheetNames[0];
+  const firstSheet = excelFile.Sheets[sheetName];
+  const jsonData = xlsx.utils.sheet_to_json(firstSheet, { defval: '' });
   req.jsonData = jsonData;
   next();
 });
 
 // 장바구니 조회
 router.get('/', (req, res) => {
-  //console.log(req.jsonData.length);
-  const cartdata = req.jsonData;
-  const uuid = req.body.uuid;
-  var cartArr = [];
-  cartdata.forEach((item) => {
-    if (item.uuid == uuid) {
+  const carData = req.jsonData;
+  const uuid = req.session.user;
+  console.log(uuid);
+  const cartArr = [];
+  carData.forEach((item) => {
+    if (item.uuid === uuid) {
       cartArr.push(item);
     }
   });
-  return res.send(cartArr);
+  return res.json(cartArr);
 });
 
 // 장바구니 추가
@@ -51,11 +50,7 @@ router.post('/', (req, res) => {
 router.delete('/:id', (req, res) => {
   const data = req.jsonData;
   const id = req.params.id;
-
   const course = data.find((item) => item.index == id);
-  if (!course)
-    return res.status(404).send('The course with the given ID was not found');
-
   const deleteIndex = data.indexOf(course);
   data.splice(deleteIndex, 1);
 

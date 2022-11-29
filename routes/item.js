@@ -15,14 +15,15 @@ router.use((req, res, next) => {
 // 전체 상품 조회
 router.get('/', (req, res) => {
   res.json(req.jsonData);
+  console.log(req.jsonData);
 });
 
 // 특정 상품 조회
 router.get('/:id', (req, res) => {
   const id = req.params.id;
-  const item = req.jsonData.find((item) => id === item.index);
-  if (item) return res.json(item);
-  return res.send(false);
+  const item = req.jsonData.find((item) => id == item.index);
+  console.log(item);
+  return res.json(item);
 });
 
 module.exports = router;

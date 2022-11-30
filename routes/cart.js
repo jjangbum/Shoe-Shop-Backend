@@ -52,13 +52,44 @@ router.post('/', (req, res) => {
 
 // 장바구니 삭제
 router.delete('/:id', (req, res) => {
-  const data = req.jsonData;
   const id = req.params.id;
-  const course = data.find((item) => item.index == id);
-  const deleteIndex = data.indexOf(course);
-  data.splice(deleteIndex, 1);
+  const uuid = req.session.user;
 
-  res.json(data);
+  workBook = xlsx.readFile(__dirname + '/../public/cart.xlsx', {
+    cellDates: true,
+  });
+
+  const cartList = workBook.Sheets['Sheet1'];
+
+  //인덱스 찾기
+  let worksheets = {};
+  worksheets['Sheet1'] = xlsx.utils.sheet_to_json(workBook.Sheets['Sheet1']);
+
+  const course = worksheets['Sheet1'].find(
+    (item) => item.index == id && item.uuid == uuid
+  );
+  const deleteIndex = worksheets['Sheet1'].indexOf(course);
+  const realIndex = deleteIndex + 1;
+  console.log(realIndex);
+
+  // 삭제
+  function ec(r, c) {
+    return xlsx.utils.encode_cell({ r: r, c: c });
+  }
+  function delete_row(ws, row_index) {
+    var variable = xlsx.utils.decode_range(ws['!ref']);
+    for (var R = row_index; R < variable.e.r; ++R) {
+      for (var C = variable.s.c; C <= variable.e.c; ++C) {
+        ws[ec(R, C)] = ws[ec(R + 1, C)];
+      }
+    }
+    variable.e.r--;
+    ws['!ref'] = xlsx.utils.encode_range(variable.s, variable.e);
+  }
+  delete_row(cartList, realIndex);
+
+  xlsx.writeFile(workBook, path.join(__dirname + '/../public/cart.xlsx'));
+  return res.send(true);
 });
 
 module.exports = router;
